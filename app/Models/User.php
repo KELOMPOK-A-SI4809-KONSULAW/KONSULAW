@@ -19,10 +19,33 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'wilayah_id',
+        'nama',
         'name',
         'email',
         'password',
+        'no_hp',
+        'role',
+        'foto_profil',
+        'status_akun',
+        'status_ekonomi',
     ];
+
+    /**
+     * Relasi ke tabel wilayah
+     */
+    public function wilayah()
+    {
+        return $this->belongsTo(Wilayah::class, 'wilayah_id');
+    }
+
+    /**
+     * Relasi ke Profil Advokat (jika user adalah advokat)
+     */
+    public function profilAdvokat()
+    {
+        return $this->hasOne(ProfilAdvokat::class, 'user_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
