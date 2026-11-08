@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProBonoApplication;
+use App\Models\VerifikasiEkonomi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Throwable;
 
@@ -14,47 +14,48 @@ class ProBonoApplicationController extends Controller
 {
     public function create(): View
     {
-        $application = Auth::check()
-            ? ProBonoApplication::with('documents')
-                ->where('user_id', Auth::id())
+        $verifikasi = auth()->check()
+            ? VerifikasiEkonomi::where('user_id', auth()->id())
                 ->latest('id')
                 ->first()
             : null;
 
-        return view('pro_bono.create', compact('application'));
+        return view('pro_bono.create', compact('verifikasi'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        if (! Auth::check()) {
+        $user = $request->user();
+
+        if (!$user) {
             return back()->withErrors([
-                'auth' => 'Silakan login sebagai masyarakat sebelum mengirim pengajuan.',
+                'auth' => 'Silakan login terlebih dahulu.',
             ]);
         }
 
-        $userId = (int) Auth::id();
+        if ($user->role !== 'masyarakat') {
+            return back()->withErrors([
+                'auth' => 'Hanya masyarakat yang dapat mengajukan verifikasi ekonomi.',
+            ]);
+        }
 
-        $previousApplication = ProBonoApplication::where('user_id', $userId)
+        $existing = VerifikasiEkonomi::where('user_id', $user->id)
             ->latest('id')
             ->first();
 
-        if (
-            $previousApplication &&
-            in_array(
-                $previousApplication->status,
-                ['pending', 'pro_bono'],
-                true
-            )
-        ) {
+        if ($existing && in_array(
+            $existing->status,
+            ['pending', 'disetujui'],
+            true
+        )) {
             return back()->with(
                 'error',
-                'Pengajuan baru belum dapat dibuat karena status sebelumnya masih Pending atau sudah Pro Bono.'
+                'Pengajuan sebelumnya masih diproses atau sudah disetujui.'
             );
         }
 
         $validated = $request->validate([
-            'documents' => ['required', 'array', 'min:1', 'max:3'],
-            'documents.*' => [
+            'dokumen' => [
                 'required',
                 'file',
                 'mimes:pdf,jpg,jpeg,png',
@@ -62,53 +63,30 @@ class ProBonoApplicationController extends Controller
             ],
         ]);
 
-        $storedPaths = [];
+        $path = $validated['dokumen']->store(
+            "verifikasi-ekonomi/{$user->id}",
+            'local'
+        );
 
         try {
-            DB::transaction(function () use (
-                $validated,
-                $userId,
-                &$storedPaths
-            ) {
-                $application = ProBonoApplication::create([
-                    'user_id' => $userId,
+            DB::transaction(function () use ($user, $path) {
+                VerifikasiEkonomi::create([
+                    'user_id' => $user->id,
+                    'dokumen' => $path,
                     'status' => 'pending',
                 ]);
 
-                foreach ($validated['documents'] as $file) {
-                    $path = $file->store(
-                        "pro-bono/{$userId}",
-                        'local'
-                    );
-
-                    $storedPaths[] = $path;
-
-                    $application->documents()->create([
-                        'original_name' => mb_substr(
-                            $file->getClientOriginalName(),
-                            0,
-                            255
-                        ),
-                        'file_path' => $path,
-                        'mime_type' => $file->getMimeType()
-                            ?? 'application/octet-stream',
-                        'size_bytes' => $file->getSize(),
-                    ]);
-                }
+                $user->update([
+                    'status_ekonomi' => 'pending',
+                ]);
             });
         } catch (Throwable $exception) {
-            if ($storedPaths !== []) {
-                Storage::disk('local')->delete($storedPaths);
-            }
-
+            Storage::disk('local')->delete($path);
             throw $exception;
         }
 
         return redirect()
             ->route('pro-bono.create')
-            ->with(
-                'success',
-                'Pengajuan berhasil disimpan dan menunggu pemeriksaan admin.'
-            );
+            ->with('success', 'Pengajuan berhasil dikirim dan menunggu pemeriksaan admin.');
     }
 }

@@ -61,26 +61,30 @@
 
             @guest
                 <div class="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-blue-900">
-                    Form ini sedang dalam tahap pengembangan.
                     Untuk mengirim pengajuan, masyarakat harus login terlebih dahulu.
                 </div>
             @endguest
 
-            @if ($application && in_array($application->status, ['pending', 'pro_bono'], true))
+            @if ($verifikasi && in_array($verifikasi->status, ['pending', 'disetujui'], true))
+
                 <div class="mt-6 rounded-lg bg-slate-100 p-5">
-                    <p class="text-sm text-slate-500">Status pengajuan terakhir</p>
+                    <p class="text-sm text-slate-500">
+                        Status pengajuan terakhir
+                    </p>
 
                     <p class="mt-1 text-xl font-semibold">
-                        {{ $application->status === 'pending' ? 'Pending' : 'Pro Bono' }}
+                        {{ $verifikasi->status === 'pending' ? 'Pending' : 'Disetujui' }}
                     </p>
 
                     <p class="mt-2 text-sm text-slate-600">
-                        {{ $application->status === 'pending'
+                        {{ $verifikasi->status === 'pending'
                             ? 'Pengajuan sedang menunggu pemeriksaan admin.'
-                            : 'Pengajuan telah disetujui.' }}
+                            : 'Pengajuan telah disetujui oleh admin.' }}
                     </p>
                 </div>
+
             @else
+
                 <form
                     action="{{ route('pro-bono.store') }}"
                     method="POST"
@@ -90,21 +94,20 @@
                     @csrf
 
                     <div>
-                        <label for="documents" class="block font-semibold">
+                        <label for="dokumen" class="block font-semibold">
                             Dokumen pendukung kondisi ekonomi
                         </label>
 
                         <p class="mt-2 text-sm leading-6 text-slate-500">
                             Format PDF, JPG, JPEG, atau PNG.
-                            Maksimal 3 file, masing-masing 5 MB.
+                            Maksimal 5 MB untuk satu dokumen.
                         </p>
 
                         <input
-                            id="documents"
-                            name="documents[]"
+                            id="dokumen"
+                            name="dokumen"
                             type="file"
                             accept=".pdf,.jpg,.jpeg,.png"
-                            multiple
                             required
                             class="mt-3 block w-full rounded-lg border border-slate-300 bg-white p-3 text-sm"
                         >
@@ -122,6 +125,7 @@
                         Ajukan Verifikasi
                     </button>
                 </form>
+
             @endif
         </section>
 
