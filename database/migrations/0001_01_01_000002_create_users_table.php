@@ -13,10 +13,19 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('wilayah_id')
+                ->nullable()
+                ->constrained('wilayah')
+                ->nullOnDelete();
+            $table->string('nama');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('no_hp', 20)->nullable();
+            $table->enum('role', ['masyarakat', 'advokat', 'admin']);
+            $table->string('foto_profil')->nullable();
+            $table->enum('status_akun', ['aktif', 'nonaktif', 'pending'])->default('aktif');
+            $table->enum('status_ekonomi', ['reguler', 'pro_bono', 'pending'])->default('reguler')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -47,3 +56,4 @@ return new class extends Migration
         Schema::dropIfExists('sessions');
     }
 };
+
