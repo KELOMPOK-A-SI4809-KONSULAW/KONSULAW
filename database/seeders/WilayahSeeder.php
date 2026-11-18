@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class WilayahSeeder extends Seeder
 {
@@ -12,10 +13,9 @@ class WilayahSeeder extends Seeder
      */
     public function run(): void
     {
-        // Nonaktifkan pemeriksaan foreign key untuk pembersihan awal
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::disableForeignKeyConstraints();
         DB::table('wilayah')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
 
         // 1. Tingkat Provinsi (parent_id = null)
         $jabarId = DB::table('wilayah')->insertGetId([
@@ -34,7 +34,47 @@ class WilayahSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // 2. Tingkat Kabupaten / Kota
+        $sumutId = DB::table('wilayah')->insertGetId([
+            'parent_id'  => null,
+            'nama'       => 'Sumatera Utara',
+            'tingkat'    => 'provinsi',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $nttId = DB::table('wilayah')->insertGetId([
+            'parent_id'  => null,
+            'nama'       => 'Nusa Tenggara Timur',
+            'tingkat'    => 'provinsi',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // 2. Tingkat Kabupaten / Kota (Sesuai Mockup Bab 4.5.2 Proposal)
+        $karoId = DB::table('wilayah')->insertGetId([
+            'parent_id'  => $sumutId,
+            'nama'       => 'Kab. Karo',
+            'tingkat'    => 'kabupaten_kota',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $kupangId = DB::table('wilayah')->insertGetId([
+            'parent_id'  => $nttId,
+            'nama'       => 'Kupang',
+            'tingkat'    => 'kabupaten_kota',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $garutId = DB::table('wilayah')->insertGetId([
+            'parent_id'  => $jabarId,
+            'nama'       => 'Kab. Garut',
+            'tingkat'    => 'kabupaten_kota',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         $kabBandungId = DB::table('wilayah')->insertGetId([
             'parent_id'  => $jabarId,
             'nama'       => 'Kabupaten Bandung',
@@ -79,4 +119,3 @@ class WilayahSeeder extends Seeder
         ]);
     }
 }
-

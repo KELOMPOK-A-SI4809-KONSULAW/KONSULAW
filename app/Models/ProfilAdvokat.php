@@ -64,5 +64,13 @@ class ProfilAdvokat extends Model
         return $this->belongsToMany(BidangHukum::class, 'advokat_bidang', 'profil_advokat_id', 'bidang_id')
                     ->withTimestamps();
     }
+
+    /**
+     * Relasi ke Ulasan Klien
+     */
+    public function ulasan()
+    {
+        return $this->hasMany(Ulasan::class, 'advokat_id', 'user_id');
+    }
 }
 
