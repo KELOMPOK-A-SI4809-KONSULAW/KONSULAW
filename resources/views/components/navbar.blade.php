@@ -45,6 +45,23 @@
             >
                 Layanan Pro Bono
             </a>
+            @auth
+                @if(auth()->user()->role === 'advokat')
+                    <a
+                        href="{{ route('advokat.dashboard') }}"
+                        class="rounded-xl px-3.5 py-2 text-sm font-bold {{ request()->is('advokat*') ? 'text-red-800 bg-red-50' : 'text-neutral-700 hover:text-red-800 hover:bg-neutral-100' }} transition"
+                    >
+                        Dasbor Advokat
+                    </a>
+                @elseif(auth()->user()->role === 'masyarakat')
+                    <a
+                        href="{{ route('masyarakat.profil.edit') }}"
+                        class="rounded-xl px-3.5 py-2 text-sm font-bold {{ request()->is('masyarakat*') ? 'text-red-800 bg-red-50' : 'text-neutral-700 hover:text-red-800 hover:bg-neutral-100' }} transition"
+                    >
+                        Profil Saya
+                    </a>
+                @endif
+            @endauth
         </div>
 
         {{-- Sisi Kanan: Tombol Masuk / Daftar (Tamu) atau Akun Pengguna (Login) --}}
@@ -55,16 +72,18 @@
                     $bagianNama = preg_split('/\s+/', trim($namaUser)) ?: ['A', 'N'];
                     $inisialUser = mb_strtoupper(mb_substr($bagianNama[0] ?? 'A', 0, 1) . mb_substr($bagianNama[1] ?? 'N', 0, 1));
                 @endphp
-                <div class="flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 py-1 pr-2.5 pl-1.5">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-red-800 text-xs font-bold text-white">
-                        {{ $inisialUser }}
-                    </div>
-                    <div class="hidden text-left sm:block">
-                        <p class="text-xs font-bold text-neutral-950 leading-none">{{ $namaUser }}</p>
-                        <p class="mt-0.5 text-[10px] font-extrabold uppercase tracking-wider text-red-800">
-                            {{ auth()->user()->role ?? 'masyarakat' }}
-                        </p>
-                    </div>
+                <div class="flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 py-1 pr-2.5 pl-1.5 shadow-2xs">
+                    <a href="{{ route('profil.index') }}" class="flex items-center gap-2 hover:opacity-80 transition cursor-pointer" title="Kelola Profil Akun">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-red-800 text-xs font-bold text-white shadow-xs">
+                            {{ $inisialUser }}
+                        </div>
+                        <div class="hidden text-left sm:block">
+                            <p class="text-xs font-bold text-neutral-950 leading-none">{{ $namaUser }}</p>
+                            <p class="mt-0.5 text-[10px] font-extrabold uppercase tracking-wider text-red-800">
+                                {{ auth()->user()->role ?? 'masyarakat' }}
+                            </p>
+                        </div>
+                    </a>
 
                     {{-- Tombol Logout / Keluar --}}
                     <form method="POST" action="{{ route('logout') }}" class="inline ml-1">

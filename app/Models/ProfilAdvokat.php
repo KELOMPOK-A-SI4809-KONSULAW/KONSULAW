@@ -15,7 +15,10 @@ class ProfilAdvokat extends Model
         'user_id',
         'no_kta',
         'no_bas',
+        'no_lisensi',
         'pengalaman',
+        'tahun_mulai_praktik',
+        'biografi',
         'tarif_konsultasi',
         'kuota_probono',
         'ketersediaan',
@@ -25,9 +28,10 @@ class ProfilAdvokat extends Model
     protected function casts(): array
     {
         return [
-            'tarif_konsultasi' => 'decimal:2',
-            'kuota_probono'    => 'integer',
-            'ketersediaan'     => 'boolean',
+            'tahun_mulai_praktik' => 'integer',
+            'tarif_konsultasi'    => 'decimal:2',
+            'kuota_probono'       => 'integer',
+            'ketersediaan'        => 'boolean',
         ];
     }
 
