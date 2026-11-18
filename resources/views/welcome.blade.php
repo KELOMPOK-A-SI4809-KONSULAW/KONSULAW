@@ -37,7 +37,7 @@
                             Kata Kunci Populer:
                         </p>
                         <div class="mt-2 flex flex-wrap gap-2">
-                            @foreach (['Sengketa batas sawah', 'Tanah waris & Letter C', 'PHK & pesangon', 'Wanprestasi', 'Keluarga & waris', 'Bantuan pro bono'] as $kataKunci)
+                            @foreach ($kataKunciPopuler ?? ['Sengketa batas sawah', 'Tanah waris & Letter C', 'PHK & pesangon', 'Wanprestasi', 'Keluarga & waris', 'Bantuan pro bono'] as $kataKunci)
                                 <span class="inline-flex items-center rounded-full border border-neutral-300 bg-white px-3 py-1 text-xs font-medium text-neutral-800 shadow-2xs">
                                     {{ $kataKunci }}
                                 </span>
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
 
-                            {{-- Grid 2 Kolom: Wilayah (Kab. Karo) & Bidang (Pertanahan) Persis Sketsa Mockup --}}
+                            {{-- Grid 2 Kolom: Wilayah & Bidang Dinamis dari Database (LAW-13) --}}
                             <div class="grid grid-cols-2 gap-3">
                                 <div class="rounded-xl border border-neutral-300 bg-neutral-50 p-2.5">
                                     <label for="pilih-wilayah" class="block text-[11px] font-bold text-neutral-500">
@@ -78,11 +78,10 @@
                                         name="wilayah"
                                         class="mt-0.5 block w-full bg-transparent text-sm font-bold text-neutral-950 focus:outline-none"
                                     >
-                                        <option value="Kab. Karo" selected>Kab. Karo</option>
-                                        <option value="Kabupaten Bandung">Kab. Bandung</option>
-                                        <option value="Kota Jakarta Selatan">Jakarta Selatan</option>
-                                        <option value="Kupang">Kupang</option>
-                                        <option value="Kab. Garut">Kab. Garut</option>
+                                        <option value="">Semua Wilayah</option>
+                                        @foreach ($wilayahList ?? [] as $w)
+                                            <option value="{{ $w->nama }}">{{ $w->nama }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -95,11 +94,10 @@
                                         name="bidang"
                                         class="mt-0.5 block w-full bg-transparent text-sm font-bold text-neutral-950 focus:outline-none"
                                     >
-                                        <option value="Pertanahan" selected>Pertanahan</option>
-                                        <option value="Perdata">Perdata</option>
-                                        <option value="Ketenagakerjaan">Ketenagakerjaan</option>
-                                        <option value="Keluarga & Waris">Keluarga &amp; Waris</option>
-                                        <option value="Pidana">Pidana</option>
+                                        <option value="">Semua Bidang</option>
+                                        @foreach ($bidangHukumList ?? [] as $b)
+                                            <option value="{{ $b->nama }}">{{ $b->nama }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

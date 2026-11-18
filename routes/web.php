@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\ProBonoApplicationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 
 Route::get('/pro-bono', [
     ProBonoApplicationController::class,

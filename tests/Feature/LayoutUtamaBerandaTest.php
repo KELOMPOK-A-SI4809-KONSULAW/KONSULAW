@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class LayoutUtamaBerandaTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_halaman_beranda_dapat_diakses_dan_menampilkan_layout_utama(): void
     {
         $response = $this->get('/');
@@ -13,6 +15,9 @@ class LayoutUtamaBerandaTest extends TestCase
         $response->assertOk();
         $response->assertSee('Konsulaw');
         $response->assertSee('BANTUAN HUKUM SAMPAI KE DESA');
+        $response->assertViewHas('wilayahList');
+        $response->assertViewHas('bidangHukumList');
+        $response->assertViewHas('kataKunciPopuler');
     }
 
     public function test_layout_utama_memuat_navbar_footer_dan_navigasi_bawah_mobile_sesuai_nfr04(): void
