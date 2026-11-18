@@ -49,6 +49,10 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
+        $request->merge([
+            'ketersediaan' => $request->boolean('ketersediaan'),
+        ]);
+
         $validated = $request->validate([
             'ketersediaan'  => ['required', 'boolean'],
             'kuota_probono' => ['required', 'integer', 'min:0', 'max:100'],

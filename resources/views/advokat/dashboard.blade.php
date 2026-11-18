@@ -155,12 +155,13 @@
                                 <input
                                     type="checkbox"
                                     name="ketersediaan"
+                                    id="toggle-ketersediaan"
                                     value="1"
                                     class="sr-only peer"
                                     {{ old('ketersediaan', $profil->ketersediaan) ? 'checked' : '' }}
                                 >
                                 <div class="w-14 h-7 bg-neutral-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[4px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-red-800"></div>
-                                <span class="ml-3 text-xs font-bold text-neutral-800 peer-checked:text-red-800">
+                                <span id="label-ketersediaan" class="ml-3 text-xs font-bold text-neutral-800 peer-checked:text-red-800">
                                     {{ old('ketersediaan', $profil->ketersediaan) ? 'Aktif Menerima' : 'Tidak Menerima' }}
                                 </span>
                             </label>
@@ -209,4 +210,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.getElementById('toggle-ketersediaan');
+        const label = document.getElementById('label-ketersediaan');
+        if (toggle && label) {
+            toggle.addEventListener('change', function () {
+                label.textContent = this.checked ? 'Aktif Menerima' : 'Tidak Menerima';
+            });
+        }
+    });
+</script>
 @endsection
