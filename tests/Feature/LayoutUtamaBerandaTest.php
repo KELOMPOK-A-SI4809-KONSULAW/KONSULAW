@@ -2,17 +2,54 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class LayoutUtamaBerandaTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_halaman_beranda_dapat_diakses_dan_menampilkan_layout_utama(): void
     {
         $response = $this->get('/');
 
         $response->assertOk();
         $response->assertSee('Konsulaw');
-        $response->assertSee('BANTUAN HUKUM SAMPAI KE DESA');
+        $response->assertSee('Daftar Advokat Terverifikasi');
+        // Tombol masuk & daftar di navbar
+        $response->assertSee('Masuk');
+        $response->assertSee('Daftar Akun');
+    }
+
+    public function test_halaman_cari_advokat_dapat_diakses(): void
+    {
+        $response = $this->get('/cari-advokat');
+
+        $response->assertOk();
+        $response->assertSee('Pencarian &amp; Direktori Lengkap Advokat', false);
+    }
+
+    public function test_halaman_kamus_hukum_dapat_diakses(): void
+    {
+        $response = $this->get('/kamus-hukum');
+
+        $response->assertOk();
+        $response->assertSee('Kamus Istilah Hukum &amp; Peraturan', false);
+    }
+
+    public function test_halaman_beranda_menampilkan_identitas_pengguna_ketika_login(): void
+    {
+        $user = User::factory()->create([
+            'nama' => 'Bambang Kusuma',
+            'role' => 'masyarakat',
+        ]);
+
+        $response = $this->actingAs($user)->get('/');
+
+        $response->assertOk();
+        $response->assertSee('Bambang Kusuma');
+        $response->assertSee('masyarakat');
     }
 
     public function test_layout_utama_memuat_navbar_footer_dan_navigasi_bawah_mobile_sesuai_nfr04(): void

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class BidangHukumSeeder extends Seeder
 {
@@ -12,18 +13,18 @@ class BidangHukumSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::disableForeignKeyConstraints();
         DB::table('bidang_hukum')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
 
         // Bidang hukum yang relevan dengan permasalahan hukum masyarakat dan desa di proposal Konsulaw
         $bidangHukum = [
-            ['nama' => 'Hukum Pertanahan & Agraria Desa'],
-            ['nama' => 'Hukum Perdata'],
-            ['nama' => 'Hukum Ketenagakerjaan'],
-            ['nama' => 'Hukum Pidana'],
-            ['nama' => 'Hukum Keluarga & Waris'],
-            ['nama' => 'Hukum Bisnis & UMKM'],
+            ['nama' => 'Pertanahan'],
+            ['nama' => 'Perdata'],
+            ['nama' => 'Ketenagakerjaan'],
+            ['nama' => 'Keluarga & Waris'],
+            ['nama' => 'Pidana'],
+            ['nama' => 'Bisnis & UMKM'],
         ];
 
         foreach ($bidangHukum as &$item) {
@@ -34,4 +35,3 @@ class BidangHukumSeeder extends Seeder
         DB::table('bidang_hukum')->insert($bidangHukum);
     }
 }
-
