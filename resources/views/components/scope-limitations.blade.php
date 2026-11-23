@@ -1,4 +1,4 @@
-{{-- Komponen Informasi Batasan Ruang Lingkup Layanan di Beranda — Tema Merah, Hitam, Putih (PBI-08 & Bab 1.3 Proposal) --}}
+{{-- Komponen Informasi Batasan Ruang Lingkup Layanan — Soft Editorial sesuai baselineui.md (PBI-08) --}}
 @php
     $batasanLayanan = $batasanLayanan ?? [
         [
@@ -37,88 +37,85 @@
 <section
     id="batasan-layanan"
     aria-labelledby="judul-batasan-layanan"
-    class="scroll-mt-24 border-t border-neutral-200 bg-neutral-100 py-14 sm:py-16"
+    class="scroll-mt-24 py-14 sm:py-18 border-t border-line"
 >
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {{-- Header Bagian Batasan Ruang Lingkup Layanan --}}
-        <div class="mx-auto max-w-3xl text-center">
-            <span class="inline-flex items-center gap-1.5 rounded-full border border-red-300 bg-red-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-red-800">
-                <svg class="h-4 w-4 text-red-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                </svg>
+        <div class="mx-auto max-w-2xl text-center">
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-line bg-paper px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-ink-soft">
                 Transparansi &amp; Ketentuan Layanan (PBI-08)
             </span>
 
-            <h2 id="judul-batasan-layanan" class="mt-3 text-2xl font-extrabold tracking-tight text-neutral-950 sm:text-3xl">
+            <h2 id="judul-batasan-layanan" class="mt-4 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
                 Informasi Batasan Ruang Lingkup Layanan Konsulaw
             </h2>
 
-            <p class="mt-3 text-sm leading-6 text-neutral-600 sm:text-base">
-                Demi menjaga kejelasan informasi bagi masyarakat pencari keadilan maupun advokat, berikut adalah 5 (lima) batasan ruang lingkup operasional platform <strong>Konsulaw</strong> yang perlu dipahami sebelum menggunakan layanan:
+            <p class="mt-2.5 text-sm text-ink-soft leading-relaxed">
+                Demi menjaga kejelasan informasi bagi masyarakat pencari keadilan maupun advokat, berikut adalah 5 batasan ruang lingkup operasional platform <strong>Konsulaw</strong>:
             </p>
         </div>
 
         {{-- Daftar 5 Poin Batasan Ruang Lingkup Layanan Sesuai Proposal Bab 1.3 --}}
         <div class="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             @foreach ($batasanLayanan as $item)
-                <article class="flex flex-col justify-between rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs transition hover:border-red-700 hover:shadow-md">
+                <article class="flex flex-col justify-between rounded-[20px] border border-line bg-paper p-6 shadow-card transition hover:border-accent">
                     <div>
                         <div class="flex items-center justify-between gap-3">
-                            <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-red-800 text-sm font-bold text-white">
+                            <span class="font-display text-2xl font-bold text-accent">
                                 {{ $item['nomor'] }}
                             </span>
-                            <span class="rounded-full border border-neutral-300 bg-neutral-50 px-2.5 py-1 text-[11px] font-semibold text-neutral-700">
+                            <span class="rounded-full border border-line bg-ivory px-2.5 py-0.5 text-[11px] font-semibold text-ink-soft">
                                 Batasan #{{ $loop->iteration }}
                             </span>
                         </div>
 
-                        <h3 class="mt-4 text-base font-bold text-neutral-950">
+                        <h3 class="mt-3 font-display text-base font-bold text-ink">
                             {{ $item['judul'] }}
                         </h3>
 
-                        <p class="mt-1 text-xs font-semibold text-red-700">
+                        <p class="mt-1 text-xs font-semibold text-accent">
                             {{ $item['ringkasan'] }}
                         </p>
 
-                        <p class="mt-3 text-sm leading-6 text-neutral-600">
+                        <p class="mt-3 text-xs leading-relaxed text-ink-soft">
                             {{ $item['deskripsi'] }}
                         </p>
                     </div>
                 </article>
             @endforeach
 
-            {{-- Kartu ke-6: Ringkasan Perbandingan Cakupan Layanan (Hitam - Merah - Putih) --}}
-            <article class="flex flex-col justify-between rounded-2xl border-2 border-red-800 bg-neutral-950 p-6 text-white shadow-xs">
+            {{-- Kartu ke-6: Ringkasan Perbandingan Cakupan Layanan --}}
+            <article class="flex flex-col justify-between rounded-[20px] border border-line bg-paper p-6 shadow-card">
                 <div>
                     <div class="flex items-center justify-between gap-3">
-                        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-red-700 text-sm font-bold text-white">
-                            &#9878;
+                        <span class="font-display text-2xl font-bold text-ink">
+                            06
                         </span>
-                        <span class="rounded-full border border-red-700 bg-red-950 px-2.5 py-1 text-[11px] font-semibold text-red-200">
-                            Panduan Singkat Warga
+                        <span class="rounded-full border border-line bg-accent-soft px-2.5 py-0.5 text-[11px] font-semibold text-accent-dark">
+                            Panduan Singkat
                         </span>
                     </div>
 
-                    <h3 class="mt-4 text-base font-bold text-white">
+                    <h3 class="mt-3 font-display text-base font-bold text-ink">
                         Ringkasan Cakupan Platform
                     </h3>
 
-                    <ul class="mt-3 space-y-2.5 text-xs leading-5 text-neutral-200">
+                    <ul class="mt-3.5 space-y-2.5 text-xs leading-relaxed text-ink-soft">
                         <li class="flex items-start gap-2">
-                            <span class="rounded bg-white px-1.5 py-0.5 text-[10px] font-extrabold text-neutral-950">TERCAKUP</span>
-                            <span>Pencarian advokat terverifikasi, pengajuan konsultasi awal (<em>pra-litigasi</em>), verifikasi ekonomi pro bono, dan edukasi literasi hukum.</span>
+                            <span class="rounded-full bg-emerald-100 text-success px-2 py-0.5 text-[10px] font-bold">TERCAKUP</span>
+                            <span>Pencarian advokat terverifikasi, konsultasi awal (pra-litigasi), verifikasi ekonomi pro bono, dan edukasi hukum.</span>
                         </li>
                         <li class="flex items-start gap-2">
-                            <span class="rounded bg-red-700 px-1.5 py-0.5 text-[10px] font-extrabold text-white">DI LUAR SISTEM</span>
-                            <span>Pendampingan sidang di pengadilan, pendaftaran berkas perkara ke pengadilan, serta jaminan kemenangan perkara.</span>
+                            <span class="rounded-full bg-rose-100 text-danger px-2 py-0.5 text-[10px] font-bold">DI LUAR</span>
+                            <span>Pendampingan sidang peradilan, pendaftaran dokumen perkara ke pengadilan, serta garansi putusan.</span>
                         </li>
                     </ul>
                 </div>
 
-                <div class="mt-5 border-t border-neutral-800 pt-4">
+                <div class="mt-5 border-t border-line pt-3">
                     <a
                         href="{{ url('/pro-bono') }}"
-                        class="inline-flex items-center gap-1.5 text-xs font-bold text-red-400 hover:text-red-300"
+                        class="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:text-accent-dark transition"
                     >
                         <span>Ajukan verifikasi status ekonomi Pro Bono</span>
                         <span aria-hidden="true">&rarr;</span>
