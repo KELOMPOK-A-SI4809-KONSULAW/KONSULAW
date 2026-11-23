@@ -1,6 +1,5 @@
 # baselineui.md — Baseline UI Konsulaw (Soft Editorial)
 
-> Pengganti versi "Aurora". Stack: Laravel Blade + Tailwind CSS. Mobile-first, lalu desktop.
 > Arah: **editorial web design** — serif besar, latar ivory, merah vermilion tegas, banyak ruang kosong. Modern tapi tidak kaku.
 > Referensi rasa: poster/situs editorial (contoh Dribbble). Ambil **tipografi dan warna**, bukan layout collage.
 
