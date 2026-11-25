@@ -16,14 +16,29 @@
     {{-- 1. HEADER + FILTER AREA DENGAN HEADER-GLOW SESUAI baselineui.md --}}
     <section class="header-glow pt-8 pb-10 sm:pt-12 sm:pb-14 border-b border-line">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            {{-- Judul 1 Baris dengan Aksen Vermilion Italic (.em) --}}
-            <div class="max-w-3xl">
-                <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl leading-tight">
-                    Cari advokat sesuai <span class="em">kasus</span> Anda
-                </h1>
-                <p class="mt-2 text-sm sm:text-base text-ink-soft">
-                    Daftar Advokat Terverifikasi yang siap memberikan konsultasi awal dan pendampingan hukum terpercaya.
-                </p>
+            {{-- Judul 1 Baris dengan Aksen Vermilion Italic (.em) & Tombol Utama CTA (B4A.1) --}}
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div class="max-w-2xl">
+                    <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl leading-tight">
+                        Cari advokat sesuai <span class="em">kasus</span> Anda
+                    </h1>
+                    <p class="mt-2 text-sm sm:text-base text-ink-soft">
+                        Daftar Advokat Terverifikasi yang siap memberikan konsultasi awal dan pendampingan hukum terpercaya.
+                    </p>
+                </div>
+
+                {{-- Tombol Utama Besar: "Ajukan Konsultasi" (CTA paling menonjol - B4A.1) --}}
+                <div class="shrink-0">
+                    <a
+                        href="{{ route('konsultasi.create') }}"
+                        class="inline-flex items-center gap-2 rounded-full bg-accent hover:bg-accent-dark px-6 py-3 text-sm font-bold text-white shadow-btn transition hover:-translate-y-0.5 active:scale-95"
+                    >
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Ajukan Konsultasi
+                    </a>
+                </div>
             </div>
 
             {{-- Form Filter Kasus & Kebutuhan --}}
@@ -226,21 +241,48 @@
                                 </div>
                             </div>
 
-                            {{-- Footer Card: Tarif & Tombol Konsultasi --}}
+                            {{-- Footer Card: Tarif, Lihat Detail & Tombol Ajukan Konsultasi (B4A.2, B5) --}}
                             <div class="mt-5 pt-3.5 border-t border-line flex items-center justify-between gap-2">
                                 <div>
-                                    <span class="block text-[11px] text-ink-soft leading-tight">Tarif</span>
+                                    <span class="block text-[10px] text-ink-soft leading-tight">Tarif</span>
                                     <span class="text-xs sm:text-sm font-bold text-ink">
                                         Rp {{ number_format($advokat->tarif_konsultasi, 0, ',', '.') }} / sesi
                                     </span>
                                 </div>
 
-                                <a
-                                    href="{{ auth()->check() ? url('/pro-bono') : route('login') }}"
-                                    class="rounded-full bg-accent hover:bg-accent-dark px-4.5 py-2 text-xs font-bold text-white shadow-btn transition hover:-translate-y-0.5 active:scale-95"
-                                >
-                                    Lihat Profil
-                                </a>
+                                <div class="flex items-center gap-2">
+                                    {{-- Tautan Teks Kecil 'Lihat detail' (B4A.2) --}}
+                                    <button
+                                        type="button"
+                                        onclick="bukaDetailAdvokat({
+                                            nama: '{{ addslashes($namaAdvokat) }}',
+                                            inisial: '{{ $inisial }}',
+                                            wilayah: '{{ addslashes($wilayahText) }}',
+                                            tarif: 'Rp {{ number_format($advokat->tarif_konsultasi, 0, ',', '.') }} / sesi',
+                                            probono: '{{ $advokat->kuota_probono }}',
+                                            pengalaman: '{{ $advokat->pengalaman ?? 5 }} tahun',
+                                            organisasi: '{{ addslashes($advokat->organisasi ?? 'PERADI') }}',
+                                            bio: '{{ addslashes($advokat->bio ?? 'Praktisi hukum berpengalaman yang siap memberikan telaah dan pendampingan hukum pra-litigasi.') }}',
+                                            konsultasiUrl: '{{ route('konsultasi.create', ['advokat' => $advokat->user_id]) }}'
+                                        })"
+                                        class="text-xs font-semibold text-ink-soft hover:text-accent transition underline underline-offset-2"
+                                    >
+                                        Lihat detail
+                                    </button>
+
+                                    @if ($advokat->ketersediaan)
+                                        <a
+                                            href="{{ route('konsultasi.create', ['advokat' => $advokat->user_id]) }}"
+                                            class="rounded-full bg-accent hover:bg-accent-dark px-4.5 py-2 text-xs font-bold text-white shadow-btn transition hover:-translate-y-0.5 active:scale-95"
+                                        >
+                                            Ajukan Konsultasi
+                                        </a>
+                                    @else
+                                        <span class="rounded-full bg-neutral-100 border border-neutral-300 px-3.5 py-2 text-xs font-medium text-neutral-500 cursor-not-allowed">
+                                            Sedang Tutup
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -334,4 +376,93 @@
 
     {{-- INFORMASI BATASAN LAYANAN (PBI-08 & Bab 1.3 Proposal) --}}
     @include('components.scope-limitations')
+
+    {{-- MODAL DETAIL KUALIFIKASI ADVOKAT (B4A.2) --}}
+    <div id="modal-detail-advokat" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs hidden">
+        <div class="rounded-[24px] border border-line bg-paper max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5">
+            <div class="flex items-start justify-between gap-3 border-b border-line pb-4">
+                <div class="flex items-center gap-3">
+                    <div id="modal-adv-avatar" class="flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] bg-accent-soft text-accent font-display font-bold text-lg">
+                        AD
+                    </div>
+                    <div>
+                        <h3 id="modal-adv-nama" class="font-display text-lg font-bold text-ink">
+                            Nama Advokat
+                        </h3>
+                        <p id="modal-adv-wilayah" class="text-xs text-ink-soft">
+                            Wilayah Praktik
+                        </p>
+                    </div>
+                </div>
+                <button type="button" onclick="tutupDetailAdvokat()" class="text-ink-soft hover:text-ink text-xl font-bold p-1">
+                    &times;
+                </button>
+            </div>
+
+            <div class="space-y-3.5 text-xs">
+                <div class="grid grid-cols-2 gap-3 rounded-[16px] bg-ivory p-3.5 border border-line">
+                    <div>
+                        <span class="block text-[10px] uppercase font-bold text-ink-soft tracking-wider">Pengalaman Praktik:</span>
+                        <span id="modal-adv-pengalaman" class="font-bold text-ink text-sm">5 tahun</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] uppercase font-bold text-ink-soft tracking-wider">Organisasi / Kantor:</span>
+                        <span id="modal-adv-organisasi" class="font-bold text-ink text-sm">PERADI</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] uppercase font-bold text-ink-soft tracking-wider">Tarif Reguler:</span>
+                        <span id="modal-adv-tarif" class="font-bold text-ink text-sm">Rp 150.000 / sesi</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] uppercase font-bold text-ink-soft tracking-wider">Kuota Pro Bono:</span>
+                        <span id="modal-adv-probono" class="font-bold text-accent-dark text-sm">Sisa 5 Kasus</span>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="block text-[11px] font-bold text-ink-soft uppercase tracking-wider mb-1">Biografi Profesional:</span>
+                    <p id="modal-adv-bio" class="text-xs text-ink leading-relaxed rounded-[14px] bg-ivory/50 p-3.5 border border-line">
+                        Praktisi hukum berpengalaman yang siap memberikan telaah dan pendampingan hukum pra-litigasi.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-line flex items-center justify-between gap-3">
+                <button
+                    type="button"
+                    onclick="tutupDetailAdvokat()"
+                    class="rounded-full border border-line bg-paper px-4 py-2 text-xs font-semibold text-ink-soft hover:text-ink transition"
+                >
+                    Tutup
+                </button>
+                <a
+                    id="modal-adv-btn-konsultasi"
+                    href="#"
+                    class="rounded-full bg-accent hover:bg-accent-dark px-6 py-2.5 text-xs font-bold text-white shadow-btn transition hover:-translate-y-0.5 active:scale-95"
+                >
+                    Ajukan Konsultasi ke Advokat Ini &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function bukaDetailAdvokat(data) {
+            document.getElementById('modal-adv-avatar').textContent = data.inisial;
+            document.getElementById('modal-adv-nama').textContent = data.nama;
+            document.getElementById('modal-adv-wilayah').textContent = data.wilayah;
+            document.getElementById('modal-adv-pengalaman').textContent = data.pengalaman;
+            document.getElementById('modal-adv-organisasi').textContent = data.organisasi;
+            document.getElementById('modal-adv-tarif').textContent = data.tarif;
+            document.getElementById('modal-adv-probono').textContent = Number(data.probono) > 0 ? 'Sisa ' + data.probono + ' Kasus' : 'Penuh Bulan Ini';
+            document.getElementById('modal-adv-bio').textContent = data.bio;
+            document.getElementById('modal-adv-btn-konsultasi').href = data.konsultasiUrl;
+
+            document.getElementById('modal-detail-advokat').classList.remove('hidden');
+        }
+
+        function tutupDetailAdvokat() {
+            document.getElementById('modal-detail-advokat').classList.add('hidden');
+        }
+    </script>
 @endsection

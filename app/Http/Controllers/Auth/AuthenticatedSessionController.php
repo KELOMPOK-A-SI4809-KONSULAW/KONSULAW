@@ -80,6 +80,15 @@ class AuthenticatedSessionController extends Controller
             default      => 'Selamat datang di Konsulaw, ' . ($user->nama ?? $user->name) . '.',
         };
 
+        // Pengalihan berdasarkan peran (Advokat -> Profil Advokat, Admin -> Profil & Panel Admin)
+        if ($user->role === 'advokat') {
+            return redirect()->route('advokat.profil.edit')->with('success', $pesanPeran);
+        }
+
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.profil.edit')->with('success', $pesanPeran);
+        }
+
         return redirect()->intended('/')->with('success', $pesanPeran);
     }
 

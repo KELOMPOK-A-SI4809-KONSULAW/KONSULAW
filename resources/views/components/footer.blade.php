@@ -75,21 +75,21 @@
                     </li>
                     <li class="flex items-start gap-2">
                         <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
-                        <span><strong class="text-white">UU Perlindungan Data Pribadi (NFR-05)</strong>: Berkas dan percakapan dilindungi privat.</span>
+                        <span><strong class="text-white">UU Perlindungan Data Pribadi</strong>: Berkas dan percakapan dilindungi secara privat.</span>
                     </li>
                 </ul>
             </div>
         </div>
 
-        {{-- Catatan Penafian Ringkas di Footer (PBI-08) --}}
+        {{-- Catatan Penafian Ringkas di Footer --}}
         <div class="mt-10 rounded-[14px] border border-white/10 bg-white/5 p-4 text-xs leading-relaxed text-white/80">
-            <strong class="text-white">Catatan Batasan Layanan (PBI-08):</strong>
+            <strong class="text-white">Catatan Batasan Layanan:</strong>
             Konsulaw memfasilitasi pencarian advokat terverifikasi, edukasi hukum umum, serta komunikasi konsultasi awal (<em>pra-litigasi</em>). Platform ini bukan lembaga peradilan, tidak menangani proses persidangan di pengadilan, dan konten edukasi di dalamnya tidak menggantikan nasihat hukum profesional atas perkara individual.
         </div>
 
         <div class="mt-8 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
             <p>&copy; {{ date('Y') }} Konsulaw — Kelompok A SI-48-09 Proyek Perangkat Lunak.</p>
-            <p>Dirancang responsif untuk perangkat Komputer &amp; Ponsel (NFR-04)</p>
+            <p>Dirancang responsif untuk perangkat komputer maupun ponsel</p>
         </div>
     </div>
 </footer>

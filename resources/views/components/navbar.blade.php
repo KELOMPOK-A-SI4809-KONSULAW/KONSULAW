@@ -15,7 +15,7 @@
             </div>
         </a>
 
-        {{-- Menu Navigasi Desktop: Beranda, Cari Advokat, Kamus Hukum, Pro Bono --}}
+        {{-- Menu Navigasi Desktop: berbeda untuk advokat vs tamu/masyarakat --}}
         <div class="hidden items-center gap-1.5 md:flex lg:gap-3">
             <a
                 href="{{ route('home') }}"
@@ -23,24 +23,96 @@
             >
                 Beranda
             </a>
-            <a
-                href="{{ route('advokat.index') }}"
-                class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('advokat.*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
-            >
-                Cari Advokat
-            </a>
-            <a
-                href="{{ route('kamus.index') }}"
-                class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('kamus.*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
-            >
-                Kamus Hukum
-            </a>
-            <a
-                href="{{ url('/pro-bono') }}"
-                class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->is('pro-bono*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
-            >
-                Layanan Pro Bono
-            </a>
+
+            @auth
+                @if(auth()->user()->role === 'admin')
+                    {{-- Navigasi khusus Administrator --}}
+                    <a
+                        href="{{ route('admin.profil.edit', ['tab' => 'verifikasi-advokat']) }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->is('admin/profil*') && request('tab') === 'verifikasi-advokat' ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Verifikasi Advokat
+                    </a>
+                    <a
+                        href="{{ route('kamus.index') }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('kamus.*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Kamus Hukum
+                    </a>
+                    <a
+                        href="{{ route('admin.profil.edit') }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->is('admin/profil*') && request('tab') !== 'verifikasi-advokat' ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Profil Admin
+                    </a>
+                @elseif(auth()->user()->role === 'advokat')
+                    {{-- Navigasi khusus Advokat --}}
+                    <a
+                        href="{{ route('advokat.dashboard') }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('advokat.dashboard') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Dasbor
+                    </a>
+                    <a
+                        href="{{ route('kamus.index') }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('kamus.*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Kamus Hukum
+                    </a>
+                    <a
+                        href="{{ route('advokat.profil.edit') }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->is('advokat/profil*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Profil Saya
+                    </a>
+                @else
+                    {{-- Navigasi untuk Masyarakat (B4) --}}
+                    <a
+                        href="{{ route('advokat.index') }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('advokat.*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Cari Advokat
+                    </a>
+                    <a
+                        href="{{ route('kamus.index') }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('kamus.*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Kamus Hukum
+                    </a>
+                    <a
+                        href="{{ route('masyarakat.profil.edit', ['tab' => 'konsultasi-saya']) }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->is('masyarakat/profil*') && request('tab') === 'konsultasi-saya' ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Konsultasi Saya
+                    </a>
+                    <a
+                        href="{{ route('masyarakat.profil.edit', ['tab' => 'status-layanan']) }}"
+                        class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->is('masyarakat/profil*') && request('tab') === 'status-layanan' ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                    >
+                        Status Layanan
+                    </a>
+                @endif
+            @else
+                {{-- Navigasi Tamu --}}
+                <a
+                    href="{{ route('advokat.index') }}"
+                    class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('advokat.*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                >
+                    Cari Advokat
+                </a>
+                <a
+                    href="{{ route('kamus.index') }}"
+                    class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('kamus.*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                >
+                    Kamus Hukum
+                </a>
+                <a
+                    href="{{ url('/pro-bono') }}"
+                    class="rounded-full px-4 py-2 text-sm font-semibold transition {{ request()->is('pro-bono*') ? 'text-accent bg-accent-soft' : 'text-ink-soft hover:text-accent hover:bg-white/60' }}"
+                >
+                    Layanan Pro Bono
+                </a>
+            @endauth
         </div>
 
         {{-- Sisi Kanan: Status Pengguna --}}
@@ -51,16 +123,22 @@
                     $bagianNama = preg_split('/\s+/', trim($namaUser)) ?: ['A', 'N'];
                     $inisialUser = mb_strtoupper(mb_substr($bagianNama[0] ?? 'A', 0, 1) . mb_substr($bagianNama[1] ?? 'N', 0, 1));
                 @endphp
-                <div class="flex items-center gap-2.5 rounded-full border border-line bg-paper py-1 pr-3 pl-1.5 shadow-card">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-accent-soft text-accent font-display font-bold text-xs">
-                        {{ $inisialUser }}
-                    </div>
-                    <div class="hidden text-left sm:block">
-                        <p class="text-xs font-bold text-ink leading-tight">{{ $namaUser }}</p>
-                        <p class="text-[10px] font-semibold uppercase tracking-wider text-accent">
-                            {{ auth()->user()->role ?? 'masyarakat' }}
-                        </p>
-                    </div>
+                <div class="flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 py-1 pr-2.5 pl-1.5 shadow-2xs">
+                    <a href="{{ route('profil.index') }}" class="flex items-center gap-2 hover:opacity-85 transition" title="Buka Profil Saya">
+                        @if(auth()->user()->foto_profil)
+                            <img src="{{ asset('storage/' . auth()->user()->foto_profil) }}" alt="{{ $namaUser }}" class="h-8 w-8 rounded-full object-cover">
+                        @else
+                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-xs font-bold text-white">
+                                {{ $inisialUser }}
+                            </div>
+                        @endif
+                        <div class="hidden text-left sm:block">
+                            <p class="text-xs font-bold text-neutral-950 leading-none">{{ $namaUser }}</p>
+                            <p class="mt-0.5 text-[10px] font-extrabold uppercase tracking-wider {{ auth()->user()->role === 'admin' ? 'text-accent font-black' : (auth()->user()->role === 'advokat' ? 'text-amber-800' : 'text-ink-soft') }}">
+                                {{ auth()->user()->role ?? 'masyarakat' }}
+                            </p>
+                        </div>
+                    </a>
 
                     {{-- Tombol Logout / Keluar --}}
                     <form method="POST" action="{{ route('logout') }}" class="inline ml-1">

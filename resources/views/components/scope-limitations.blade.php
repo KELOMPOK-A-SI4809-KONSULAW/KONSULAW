@@ -43,7 +43,7 @@
         {{-- Header Bagian Batasan Ruang Lingkup Layanan --}}
         <div class="mx-auto max-w-2xl text-center">
             <span class="inline-flex items-center gap-1.5 rounded-full border border-line bg-paper px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-ink-soft">
-                Transparansi &amp; Ketentuan Layanan (PBI-08)
+                Transparansi &amp; Ketentuan Layanan
             </span>
 
             <h2 id="judul-batasan-layanan" class="mt-4 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
