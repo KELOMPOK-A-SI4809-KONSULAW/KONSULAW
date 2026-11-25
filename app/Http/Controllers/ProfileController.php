@@ -15,7 +15,7 @@ class ProfileController extends Controller
         $role = $request->user()->role;
 
         return match ($role) {
-            'advokat'    => redirect()->route('advokat.dashboard'),
+            'advokat'    => redirect()->route('advokat.profil.edit'),
             'masyarakat' => redirect()->route('masyarakat.profil.edit'),
             default      => redirect('/'),
         };

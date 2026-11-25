@@ -74,12 +74,22 @@ Route::middleware('auth')->group(function () {
     // 2. Rute Pengelolaan Profil & Layanan ADVOKAT
     // ---------------------------------------------------------------------
     Route::middleware('role:advokat')->prefix('advokat')->name('advokat.')->group(function () {
-        // Dasbor & Pengaturan Ketersediaan Layanan / Kuota Pro Bono
+        // Dasbor
         Route::get('/dashboard', [AdvokatDashboardController::class, 'index'])->name('dashboard');
         Route::put('/layanan', [AdvokatDashboardController::class, 'updateLayanan'])->name('layanan.update');
 
-        // Pengelolaan Profil Profesional Advokat & Spesialisasi
+        // Profil Saya — halaman utama (multi-tab)
         Route::get('/profil', [AdvokatProfileController::class, 'edit'])->name('profil.edit');
         Route::put('/profil', [AdvokatProfileController::class, 'update'])->name('profil.update');
+
+        // Simpan per-tab
+        Route::put('/profil/info-pribadi', [AdvokatProfileController::class, 'updateInfoPribadi'])->name('profil.info-pribadi');
+        Route::put('/profil/data-profesional', [AdvokatProfileController::class, 'updateDataProfesional'])->name('profil.data-profesional');
+        Route::put('/profil/bidang-wilayah', [AdvokatProfileController::class, 'updateBidangWilayah'])->name('profil.bidang-wilayah');
+        Route::post('/profil/upload-dokumen', [AdvokatProfileController::class, 'uploadDokumen'])->name('profil.upload-dokumen');
+        Route::post('/profil/kirim-verifikasi', [AdvokatProfileController::class, 'kirimVerifikasi'])->name('profil.kirim-verifikasi');
+        Route::put('/profil/tarif-ketersediaan', [AdvokatProfileController::class, 'updateTarifKetersediaan'])->name('profil.tarif-ketersediaan');
+        Route::put('/profil/kuota', [AdvokatProfileController::class, 'updateKuota'])->name('profil.kuota');
+        Route::put('/profil/password', [AdvokatProfileController::class, 'updatePassword'])->name('profil.password');
     });
 });

@@ -6,21 +6,23 @@
     <meta name="description" content="Konsulaw — Platform Bantuan Hukum dan Keterbukaan Layanan Publik Kota dan Desa.">
     <title>{{ $title ?? 'Konsulaw — Platform Bantuan Hukum & Keterbukaan Layanan Publik Kota dan Desa' }}</title>
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+    {{-- Tipografi: Fraunces (Display serif) & Plus Jakarta Sans (Body & UI) sesuai baselineui.md --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..800;1,9..144,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen flex flex-col bg-neutral-50 text-neutral-900 antialiased selection:bg-red-700 selection:text-white">
+<body class="min-h-screen flex flex-col bg-ivory text-ink font-sans antialiased selection:bg-accent selection:text-white">
     {{-- Tautan Aksesibilitas Lewati ke Konten Utama (NFR-04) --}}
     <a
         href="#konten-utama"
-        class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-red-800 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
+        class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-btn focus:outline-none focus:ring-3 focus:ring-accent-soft"
     >
         Lewati ke konten utama
     </a>
 
-    {{-- Navbar Utama (Desktop & Mobile Header) --}}
+    {{-- Navbar Utama (Top Bar) --}}
     @include('components.navbar')
 
     {{-- Konten Utama Halaman --}}
