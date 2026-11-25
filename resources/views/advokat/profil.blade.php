@@ -44,11 +44,40 @@
 <div class="bg-ivory border-b border-line">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div class="flex flex-col sm:flex-row sm:items-start gap-5">
-            {{-- Avatar / Foto Profil --}}
+            {{-- Avatar / Foto Profil Interaktif --}}
             <div class="shrink-0">
-                <div class="flex h-20 w-20 items-center justify-center rounded-full bg-accent text-2xl font-bold text-white shadow-btn ring-4 ring-accent-soft">
-                    {{ $inisial }}
+                <div class="relative group">
+                    <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="relative block rounded-full focus:outline-none focus:ring-4 focus:ring-accent-soft cursor-pointer transition" title="Klik untuk mengganti foto profil">
+                        @if($user->foto_profil)
+                            <img src="{{ asset('storage/' . $user->foto_profil) }}" alt="{{ $nama }}" class="h-20 w-20 rounded-full object-cover shadow-btn ring-4 ring-accent-soft group-hover:brightness-90 transition">
+                        @else
+                            <div class="flex h-20 w-20 items-center justify-center rounded-full bg-accent text-2xl font-bold text-white shadow-btn ring-4 ring-accent-soft group-hover:bg-accent-dark transition">
+                                {{ $inisial }}
+                            </div>
+                        @endif
+                        {{-- Hover Badge / Camera Overlay --}}
+                        <div class="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/45 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg class="h-5 w-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                            </svg>
+                            <span class="text-[10px] font-bold tracking-tight">Ubah</span>
+                        </div>
+                    </button>
+                    {{-- Mini Camera Badge at bottom-right --}}
+                    <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-paper border border-line shadow-sm text-ink-soft hover:text-accent hover:border-accent transition cursor-pointer" title="Unggah foto profil">
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                        </svg>
+                    </button>
                 </div>
+
+                {{-- Hidden Form for Instant Avatar Upload --}}
+                <form id="avatar-form" action="{{ route('advokat.profil.foto') }}" method="POST" enctype="multipart/form-data" class="hidden">
+                    @csrf
+                    <input type="file" id="avatar-file-input" name="foto_profil" accept="image/png,image/jpeg,image/jpg,image/webp" onchange="document.getElementById('avatar-form').submit()">
+                </form>
             </div>
 
             {{-- Info Utama --}}
@@ -64,8 +93,10 @@
                             Terverifikasi
                         </span>
                     @elseif($status === 'pending')
-                        <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-warning">
-                            <svg class="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                            <svg class="h-3.5 w-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
                             Menunggu Verifikasi
                         </span>
                     @elseif($status === 'ditolak')
@@ -243,12 +274,14 @@
     @elseif($kondisi == 3)
         <div class="mb-6 rounded-[14px] border border-amber-300 bg-amber-50 p-5">
             <div class="flex items-start gap-3">
-                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-warning text-white">
-                    <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-500 text-white shadow-sm">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
                 </div>
                 <div>
-                    <p class="font-semibold text-warning">Dokumen sedang diperiksa admin.</p>
-                    <p class="mt-0.5 text-sm text-warning/80">Notifikasi hasil verifikasi akan muncul otomatis. Anda tetap dapat memperbarui foto profil dan biografi selama proses berlangsung.</p>
+                    <p class="font-semibold text-amber-900">Dokumen sedang diperiksa admin.</p>
+                    <p class="mt-0.5 text-sm text-amber-800/85 leading-relaxed">Notifikasi hasil verifikasi akan muncul otomatis. Anda tetap dapat memperbarui foto profil dan biografi selama proses berlangsung.</p>
                 </div>
             </div>
         </div>
@@ -327,7 +360,7 @@
         <div class="flex-1 min-w-0">
 
             {{-- Tampilkan error validasi --}}
-            @if($errors->any())
+            @if(isset($errors) && $errors->any())
                 <div class="mb-5 rounded-[14px] border border-danger bg-red-50 p-4 text-sm text-danger">
                     <p class="font-bold mb-1">Mohon perbaiki data berikut:</p>
                     <ul class="list-disc list-inside space-y-0.5 text-xs">
@@ -342,7 +375,44 @@
             @if($tabAktif === 'informasi-pribadi')
                 <div class="rounded-[20px] border border-line bg-paper p-6 sm:p-8 shadow-card">
                     <h2 class="font-display text-lg font-bold text-ink mb-5">Informasi Pribadi</h2>
-                    <form method="POST" action="{{ route('advokat.profil.info-pribadi') }}" class="space-y-5">
+
+                    {{-- Card Foto Profil --}}
+                    <div class="rounded-[14px] border border-line bg-ivory/60 p-4 mb-6">
+                        <label class="block text-sm font-semibold text-ink mb-2">Foto Profil Resmi</label>
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <div class="shrink-0">
+                                @if($user->foto_profil)
+                                    <img src="{{ asset('storage/' . $user->foto_profil) }}" alt="{{ $user->nama }}" class="h-16 w-16 rounded-full object-cover ring-2 ring-accent shadow-sm">
+                                @else
+                                    <div class="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-xl font-bold text-white shadow-sm">
+                                        {{ $inisial }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="flex-1 text-center sm:text-left">
+                                <div class="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+                                    <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="rounded-full bg-paper border border-line px-4 py-2 text-xs font-semibold text-ink hover:border-accent hover:text-accent transition shadow-xs cursor-pointer">
+                                        <svg class="h-3.5 w-3.5 inline mr-1 text-ink-soft" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                                        </svg>
+                                        Pilih Foto Baru
+                                    </button>
+                                    @if($user->foto_profil)
+                                        <form action="{{ route('advokat.profil.hapus-foto') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus foto profil ini?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="rounded-full bg-red-50 border border-red-200 px-3.5 py-2 text-xs font-semibold text-danger hover:bg-red-100 transition cursor-pointer">
+                                                Hapus Foto
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                                <p class="mt-1.5 text-xs text-ink-soft">Foto resmi untuk direktori dan konsultasi. Format: JPG, PNG, atau WebP (maks. 2 MB).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ route('advokat.profil.info-pribadi') }}" enctype="multipart/form-data" class="space-y-5">
                         @csrf @method('PUT')
 
                         {{-- Nama Lengkap --}}
@@ -557,7 +627,7 @@
                     <h2 class="font-display text-lg font-bold text-ink mb-2">Dokumen Verifikasi</h2>
                     <div class="mb-5 flex items-start gap-2 rounded-[10px] border border-line bg-ivory/80 px-3.5 py-3 text-xs text-ink-soft">
                         <svg class="h-4 w-4 shrink-0 mt-0.5 text-info" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
-                        <span>Dokumen disimpan di server privat dan hanya dapat dilihat admin untuk keperluan verifikasi (TR-04 / NFR-05). Tidak ditampilkan ke publik.</span>
+                        <span>Dokumen disimpan di server privat terenkripsi dan hanya dapat ditinjau oleh tim verifikator admin untuk validasi kredensial. Berkas tidak akan ditampilkan ke publik.</span>
                     </div>
 
                     @php

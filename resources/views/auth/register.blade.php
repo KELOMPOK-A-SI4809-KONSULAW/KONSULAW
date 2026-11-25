@@ -222,9 +222,9 @@
             </div>
         </div>
 
-        {{-- Jaminan Privasi & Perlindungan Data Pribadi (NFR-05) --}}
+        {{-- Jaminan Privasi & Perlindungan Data Pribadi --}}
         <p class="mt-6 text-center text-xs text-ink-soft">
-            Dengan mendaftar, data Anda terlindungi sesuai ketentuan UU Perlindungan Data Pribadi (NFR-05).
+            Dengan mendaftar, data Anda terlindungi sesuai ketentuan UU Perlindungan Data Pribadi.
         </p>
     </div>
 </div>

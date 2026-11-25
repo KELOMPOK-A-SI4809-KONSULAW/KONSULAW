@@ -150,9 +150,9 @@
             </div>
         </div>
 
-        {{-- Jaminan Privasi Sesuai NFR-05 Proposal --}}
+        {{-- Jaminan Privasi --}}
         <p class="mt-6 text-center text-xs text-ink-soft">
-            Dilindungi sistem keamanan sandi terenkripsi (NFR-01) &amp; privasi data (NFR-05).
+            Dilindungi sistem keamanan sandi terenkripsi &amp; privasi data terjamin.
         </p>
     </div>
 </div>

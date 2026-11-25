@@ -20,7 +20,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        $user = $request->user();
+        $user = $request->user() ?? auth()->user();
 
         // Buat profil draft jika belum ada (first-time login)
         $profil = $user->profilAdvokat ?? ProfilAdvokat::firstOrCreate(
@@ -73,22 +73,77 @@ class ProfileController extends Controller
         $user = $request->user();
 
         $validated = $request->validate([
-            'nama'       => ['required', 'string', 'max:255'],
-            'no_hp'      => ['required', 'string', 'max:30'],
-            'wilayah_id' => ['nullable', 'exists:wilayah,id'],
+            'nama'        => ['required', 'string', 'max:255'],
+            'no_hp'       => ['required', 'string', 'max:30'],
+            'wilayah_id'  => ['nullable', 'exists:wilayah,id'],
+            'foto_profil' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ], [
-            'nama.required'  => 'Nama lengkap beserta gelar wajib diisi.',
-            'no_hp.required' => 'Nomor HP/WhatsApp aktif wajib diisi.',
+            'nama.required'     => 'Nama lengkap beserta gelar wajib diisi.',
+            'no_hp.required'    => 'Nomor HP/WhatsApp aktif wajib diisi.',
+            'foto_profil.image' => 'File foto profil harus berupa gambar.',
+            'foto_profil.mimes' => 'Format foto harus JPG, PNG, atau WebP.',
+            'foto_profil.max'   => 'Ukuran foto maksimal 2 MB.',
         ]);
 
-        $user->update([
+        $updateData = [
             'nama'       => $validated['nama'],
             'no_hp'      => $validated['no_hp'],
             'wilayah_id' => $validated['wilayah_id'] ?? null,
-        ]);
+        ];
+
+        if ($request->hasFile('foto_profil')) {
+            if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
+                Storage::disk('public')->delete($user->foto_profil);
+            }
+            $updateData['foto_profil'] = $request->file('foto_profil')->store('avatars', 'public');
+        }
+
+        $user->update($updateData);
 
         return redirect()->route('advokat.profil.edit', ['tab' => 'informasi-pribadi'])
             ->with('success', 'Informasi pribadi berhasil diperbarui.');
+    }
+
+    /**
+     * Unggah atau perbarui foto profil secara instan.
+     */
+    public function updateFoto(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'foto_profil' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+        ], [
+            'foto_profil.required' => 'Silakan pilih file foto terlebih dahulu.',
+            'foto_profil.image'    => 'File yang diunggah harus berupa gambar.',
+            'foto_profil.mimes'    => 'Format foto harus JPG, PNG, atau WebP.',
+            'foto_profil.max'      => 'Ukuran foto profil maksimal 2 MB.',
+        ]);
+
+        if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
+            Storage::disk('public')->delete($user->foto_profil);
+        }
+
+        $path = $request->file('foto_profil')->store('avatars', 'public');
+        $user->update(['foto_profil' => $path]);
+
+        return back()->with('success', 'Foto profil berhasil diperbarui.');
+    }
+
+    /**
+     * Hapus foto profil pengguna.
+     */
+    public function hapusFoto(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
+            Storage::disk('public')->delete($user->foto_profil);
+        }
+
+        $user->update(['foto_profil' => null]);
+
+        return back()->with('success', 'Foto profil berhasil dihapus.');
     }
 
     /**
